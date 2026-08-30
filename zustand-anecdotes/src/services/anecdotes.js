@@ -6,4 +6,19 @@ const getAll = async () => {
     return data
 }
 
-export default {getAll}
+const create = async newObject => {
+    const response = await fetch(baseUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newObject)
+
+    })
+
+    const data = await response.json()
+    return data
+
+}
+
+export default { getAll, create }

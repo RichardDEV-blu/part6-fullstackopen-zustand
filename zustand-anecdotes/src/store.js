@@ -25,12 +25,18 @@ const useAnecdoteStore = create((set) => ({
       )
     })),
 
-    create: content => set(state => ({
-      anecdotes: [
-        ...state.anecdotes,
-        asObject(content)
-      ]
-    })),
+    create: async content => {
+      const newObject = {
+        content,
+        votes: 0
+      }
+
+      const anecdote = await anecdoteService.create(newObject)
+
+      set(state => ({
+        anecdotes: [...state.anecdotes, anecdote]
+      }))
+    },
 
     setFilter: filter => set({ filter })
   },
