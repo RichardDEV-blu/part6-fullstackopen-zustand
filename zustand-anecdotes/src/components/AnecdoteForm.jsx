@@ -8,6 +8,8 @@ const AnecdoteForm = () => {
 
         const content = new FormData(event.target).get('content')
         create(content)
+
+        event.target.reset()
     }
 
     return (

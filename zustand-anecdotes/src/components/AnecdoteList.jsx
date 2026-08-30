@@ -3,7 +3,7 @@ import { useAnecdotes, useFilter, useAnecdoteActions } from '../store'
 const AnecdoteList = () => {
     const anecdotes = useAnecdotes()
     const filter = useFilter()
-    const { vote } = useAnecdoteActions()
+    const { vote, remove } = useAnecdoteActions()
 
     const filteredAnecdotes = anecdotes.filter(a =>
         a.content.toLowerCase().includes(filter.toLowerCase())
@@ -23,9 +23,16 @@ const AnecdoteList = () => {
                         <button onClick={() => vote(anecdote.id)}>
                             vote
                         </button>
+
+                        {anecdote.votes === 0 && (
+                            <button onClick={() => remove(anecdote.id)}>
+                                delete
+                            </button>
+                        )}
                     </div>
                 </div>
             ))}
+
         </div>
     )
 }

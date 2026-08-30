@@ -1,8 +1,16 @@
 const baseUrl = 'http://localhost:3001/anecdotes'
 
+const ensureSuccess = response => {
+    if (!response.ok) {
+        throw new Error(`Request failed (${response.status} ${response.statusText})`)
+    }
+
+    return response
+}
+
 const getAll = async () => {
     const response = await fetch(baseUrl)
-    const data = await response.json()
+    const data = await ensureSuccess(response).json()
     return data
 }
 
@@ -16,7 +24,7 @@ const create = async newObject => {
 
     })
 
-    const data = await response.json()
+    const data = await ensureSuccess(response).json()
     return data
 
 }
@@ -31,10 +39,18 @@ const update = async (id, newObject) => {
 
     })
 
-    const data = await response.json()
+    const data = await ensureSuccess(response).json()
 
     return data
 
 }
 
-export default { getAll, create, update }
+const remove = async (id) => {
+    const response = await fetch(`${baseUrl}/${id}`, {
+        method: 'DELETE'
+    })
+
+    ensureSuccess(response)
+}
+
+export default { getAll, create, update, remove }
