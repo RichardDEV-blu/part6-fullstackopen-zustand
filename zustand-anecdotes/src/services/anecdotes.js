@@ -21,4 +21,20 @@ const create = async newObject => {
 
 }
 
-export default { getAll, create }
+const update = async (id, newObject) => {
+    const response = await fetch(`${baseUrl}/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newObject)
+
+    })
+
+    const data = await response.json()
+
+    return data
+
+}
+
+export default { getAll, create, update }
