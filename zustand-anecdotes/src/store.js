@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import anecdoteService from './services/anecdotes'
-
+import notificationStore from './notificationStore'
 
 const useAnecdoteStore = create((set, get) => ({
   anecdotes: [],
@@ -14,7 +14,7 @@ const useAnecdoteStore = create((set, get) => ({
 
     vote: async (id) => {
       const anecdote = get().anecdotes.find(a => a.id === id)
-       
+
 
       const updatedAnecdote = {
         ...anecdote,
@@ -29,6 +29,10 @@ const useAnecdoteStore = create((set, get) => ({
       set(state => ({
         anecdotes: state.anecdotes.map(a => a.id === id ? returnedAnecdote : a)
       }))
+
+      notificationStore.getState().actions.showNotification(
+        `You voted for '${anecdote.content}'`
+      )
     },
 
     create: async content => {
@@ -42,6 +46,10 @@ const useAnecdoteStore = create((set, get) => ({
       set(state => ({
         anecdotes: [...state.anecdotes, anecdote]
       }))
+
+      notificationStore.getState().actions.showNotification(
+        `created '${anecdote.content}'`
+      )
     },
 
     setFilter: filter => set({ filter })
