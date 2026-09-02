@@ -2,7 +2,16 @@ import { create } from 'zustand'
 import anecdoteService from './services/anecdotes'
 import notificationStore from './notificationStore'
 
-const useAnecdoteStore = create((set, get) => ({
+const logger = (config) => (set, get) => config(
+  (...args) => {
+    console.log('prev state', get())
+    set(...args)
+    console.log('next state', get())
+  },
+  get
+)
+
+const useAnecdoteStore = create(logger((set, get) => ({
   anecdotes: [],
   filter: '',
 
@@ -67,7 +76,7 @@ const useAnecdoteStore = create((set, get) => ({
 
     setFilter: filter => set({ filter })
   },
-}))
+})))
 
 export const useAnecdotes = () => useAnecdoteStore((state) => state.anecdotes)
 export const useFilter = () => useAnecdoteStore((state) => state.filter)
