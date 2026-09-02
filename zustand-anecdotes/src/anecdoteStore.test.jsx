@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import anecdoteService from './services/anecdotes'
 import useAnecdoteStore from './anecdoteStore'
+import { renderHook, render, screen } from '@testing-library/react'
+import { useAnecdotes } from './anecdoteStore'
+import AnecdoteList from './components/AnecdoteList'
 
 vi.mock('./services/anecdotes')
 
@@ -51,6 +54,64 @@ describe('anecdote store', () => {
         const state = useAnecdoteStore.getState()
         expect(state.anecdotes).toEqual(anecdotes)
 
+    })
+
+    test('returns anecdotes sorted by votes', () => {
+        useAnecdoteStore.setState(
+            {
+                anecdotes: [
+                    {
+                        id: '1',
+                        content: 'First anecdote',
+                        votes: 3
+                    },
+                    {
+                        id: '2',
+                        content: 'Second anecdote',
+                        votes: 10
+                    },
+                    {
+                        id: '3',
+                        content: 'Third anecdote',
+                        votes: 5
+                    }
+                ]
+            }
+        )
+
+        const { result } = renderHook(() => useAnecdotes())
+        expect(result.current.map(anecdotes => anecdotes.votes)).toEqual([10, 5, 3])
+
+
+    })
+
+    test('shows anecdotes according to filter', () => {
+        useAnecdoteStore.setState({
+            anecdotes: [
+                {
+                    id: '1',
+                    content: 'First anecdote',
+                    votes: 3
+                },
+                {
+                    id: '2',
+                    content: 'Second anecdote',
+                    votes: 10
+                },
+                {
+                    id: '3',
+                    content: 'Another story',
+                    votes: 5
+                }
+            ],
+            filter: 'second'
+        })
+
+        render(<AnecdoteList />)
+
+        expect(screen.getByText('Second anecdote')).toBeInTheDocument()
+        expect(screen.queryByText('First anecdote')).not.toBeInTheDocument()
+        expect(screen.queryByText('Another story')).not.toBeInTheDocument()
     })
 
 

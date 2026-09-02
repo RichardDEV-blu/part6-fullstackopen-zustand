@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { useShallow } from 'zustand/react/shallow'
 import anecdoteService from './services/anecdotes'
 import notificationStore from './notificationStore'
 
@@ -78,8 +79,15 @@ const useAnecdoteStore = create(logger((set, get) => ({
   },
 })))
 
-export const useAnecdotes = () => useAnecdoteStore((state) => state.anecdotes)
+export const useAnecdotes = () =>
+  useAnecdoteStore(
+    useShallow((state) =>
+      state.anecdotes.toSorted((a, b) => b.votes - a.votes)
+    )
+  )
+
 export const useFilter = () => useAnecdoteStore((state) => state.filter)
+
 export const useAnecdoteActions = () => useAnecdoteStore((state) => state.actions)
 
 export default useAnecdoteStore
