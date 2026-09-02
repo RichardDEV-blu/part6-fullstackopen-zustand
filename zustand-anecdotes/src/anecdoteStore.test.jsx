@@ -114,6 +114,39 @@ describe('anecdote store', () => {
         expect(screen.queryByText('Another story')).not.toBeInTheDocument()
     })
 
+    test('increases votes of an anecdote', async () => {
+        const anecdote = {
+            id: '1',
+            content: 'If it hurts, do it more often',
+            votes: 5
+        }
+
+        useAnecdoteStore.setState({
+            anecdotes: [anecdote],
+            filter: ''
+        })
+
+        anecdoteService.update.mockResolvedValue({
+            ...anecdote,
+            votes: 6
+        })
+
+        await useAnecdoteStore.getState().actions.vote('1')
+
+        const state = useAnecdoteStore.getState()
+
+        expect(anecdoteService.update).toHaveBeenCalledWith(
+            '1',
+            {
+                id: '1',
+                content: 'If it hurts, do it more often',
+                votes: 6
+            }
+        )
+
+        expect(state.anecdotes[0].votes).toBe(6)
+    })
+
 
 
 
