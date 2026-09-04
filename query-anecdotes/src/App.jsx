@@ -1,19 +1,19 @@
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
-import { useQuery } from '@tanstack/react-query'
-import { getAnecdotes } from './requests'
+import { useAnecdotes, useVoteMutation } from './hooks/useAnecdotes'
 const App = () => {
-  const result = useQuery({
-    queryKey: ['anecdotes'],
-    queryFn: getAnecdotes,
-    retry: false
-  })
 
-  
+  const voteMutation = useVoteMutation()
+
+  const result = useAnecdotes()
+
   const handleVote = (anecdote) => {
-    console.log('vote')
+    voteMutation.mutate({
+      ...anecdote,
+      votes: anecdote.votes + 1
+    })
   }
-  
+
 
   if (result.isPending) {
     return <div>loading data...</div>
