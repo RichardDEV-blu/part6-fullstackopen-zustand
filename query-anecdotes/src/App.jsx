@@ -9,11 +9,11 @@ const App = () => {
     retry: false
   })
 
-  /*
+  
   const handleVote = (anecdote) => {
     console.log('vote')
   }
-  */
+  
 
   if (result.isPending) {
     return <div>loading data...</div>
