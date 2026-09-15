@@ -19,6 +19,10 @@ export const createAnecdote = async (newAnecdote) => {
         body: JSON.stringify(newAnecdote),
     })
 
+    if (!response.ok) {
+        throw new Error('something went wrong')
+    }
+
     return response.json()
 }
 
@@ -33,5 +37,10 @@ export const updateAnecdote = async (updatedAnecdote) => {
 
         }
     )
+
+    if (!response.ok) {
+        throw new Error('something went wrong')
+    }
+
     return response.json()
 }

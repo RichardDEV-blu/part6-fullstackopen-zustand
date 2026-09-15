@@ -38,6 +38,10 @@ export const useCreateMutation = () => {
                 queryKey: ['anecdotes']
             })
             notify('anecdote created')
+        },
+
+        onError: () => {
+            notify('anecdote creation failed')
         }
     })
 }
